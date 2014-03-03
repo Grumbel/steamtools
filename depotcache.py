@@ -23,6 +23,7 @@
 import sys
 import struct
 import binascii
+import argparse
 from io import BytesIO
 
 
@@ -225,11 +226,23 @@ def decode_depotcache(filename, print_unknown=False):
 
 
 def main():
-    for filename in sys.argv[1:]:
-        print('Decoding %s...' % filename, file=sys.stderr)
-        for entry in decode_depotcache(filename, True):
-            print('%s\n\t\t%s' % entry)
-        print(file=sys.stderr)
+    parser = argparse.ArgumentParser(description='Steam depositcache decoder')
+    parser.add_argument('FILE', action='store', type=str, nargs='+',
+                        help='files to process')
+    parser.add_argument('--sha1sum', action='store_true', default=False,
+                        help='print depotcache in sha1sum format')
+    args = parser.parse_args()
+
+    if args.sha1sum:
+        for filename in args.FILE:
+            for name, entry in decode_depotcache(filename, True):
+                print("%s %s" % (entry.sha.decode('ascii'), name.decode('latin-1').replace("\\", "/")))
+    else:
+        for filename in args.FILE:
+            print('Decoding %s...' % filename, file=sys.stderr)
+            for entry in decode_depotcache(filename, True):
+                print('%s\n\t\t%s' % entry)
+            print(file=sys.stderr)
 
 if __name__ == '__main__':
     main()
