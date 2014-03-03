@@ -22,13 +22,13 @@
 
 import sys
 import struct
-from StringIO import StringIO
+from io import StringIO
 
 
 def pr_unknown(data, print_unknown):
     if print_unknown:
         decoded = struct.unpack('%dB' % len(data), data)
-        print>>sys.stderr, '[? ' + ' '.join(['%.2X' % x for x in decoded]) + ' ?]'
+        print('[? ' + ' '.join(['%.2X' % x for x in decoded]) + ' ?]', file=sys.stderr)
 
 
 def pr_unexpected(data, expected, note=''):
@@ -36,9 +36,9 @@ def pr_unexpected(data, expected, note=''):
     expected_bytes = [int(expected[i:i + 2], 16) for i in range(0, l * 2, 2)]
     decoded = struct.unpack('%dB' % len(data), data)
     if decoded != tuple(expected_bytes):
-        print 'WARNING: %sExpected [%s], got [%s]' % (note,
+        print('WARNING: %sExpected [%s], got [%s]' % (note,
                                                       ' '.join(['%.2X' % x for x in expected_bytes]),
-                                                      ' '.join(['%.2X' % x for x in decoded]))
+                                                      ' '.join(['%.2X' % x for x in decoded])))
         return 1
     return 0
 
@@ -191,16 +191,16 @@ def decode_entry(f):
 
 
 def dump_remaining_data(f):
-    print>>sys.stderr, 'Remaining undecoded data:'
+    print('Remaining undecoded data:', file=sys.stderr)
     try:
         while True:
             for i in range(2):
                 for j in range(8):
-                    print>>sys.stderr, '%.2X' % struct.unpack('B', f.read(1))[0],
-                print>>sys.stderr, '',
-            print>>sys.stderr
+                    print('%.2X' % struct.unpack('B', f.read(1))[0], end=' ', file=sys.stderr)
+                print('', end=' ', file=sys.stderr)
+            print(file=sys.stderr)
     except:
-        print>>sys.stderr
+        print(file=sys.stderr)
         return
 
 
@@ -215,19 +215,19 @@ def decode_depotcache(filename, print_unknown=False):
                 yield decode_entry(f)
             elif byte == 0xbe:
                 if print_unknown:
-                    print>>sys.stderr, '0xBE FOUND, ENDING'
+                    print('0xBE FOUND, ENDING', file=sys.stderr)
                     dump_remaining_data(f)
                 return
             else:
-                print 'WARNING: UNKNOWN TYPE 0x%.2X' % byte
+                print('WARNING: UNKNOWN TYPE 0x%.2X' % byte)
 
 
 def main():
     for filename in sys.argv[1:]:
-        print>>sys.stderr, 'Decoding %s...' % filename
+        print('Decoding %s...' % filename, file=sys.stderr)
         for entry in decode_depotcache(filename, True):
-            print '%s\n\t\t%s' % entry
-        print>>sys.stderr
+            print('%s\n\t\t%s' % entry)
+        print(file=sys.stderr)
 
 if __name__ == '__main__':
     main()
