@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Copyright (c) 2012-2014 Ian Munsie <darkstarsword@gmail.com>
+#               2014      Ingo Ruhnke <grumbel@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -236,7 +237,8 @@ def main():
     if args.sha1sum:
         for filename in args.FILE:
             for name, entry in decode_depotcache(filename, True):
-                print("%s %s" % (entry.sha.decode('ascii'), name.decode('latin-1').replace("\\", "/")))
+                if entry.filetype != "directory":
+                    print("%s %s" % (entry.sha.decode('ascii'), name.decode('latin-1').replace("\\", "/")))
     else:
         for filename in args.FILE:
             print('Decoding %s...' % filename, file=sys.stderr)
