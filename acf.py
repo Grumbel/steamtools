@@ -72,7 +72,7 @@ def parse_acf(filename):
 
 def main():
 	for filename in sys.argv[1:]:
-		print parse_acf(filename)
+		print(parse_acf(filename))
 
 
 if __name__ == '__main__':
