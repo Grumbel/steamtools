@@ -72,7 +72,7 @@ class AcfNode(dict):
 
 
 def parse_acf(filename):
-    with file(filename, 'r') as f:
+    with open(filename, 'r') as f:
         return AcfNode(f)
 
 
