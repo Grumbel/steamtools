@@ -22,6 +22,7 @@
 # THE SOFTWARE.
 
 import sys
+import argparse
 
 # The acf files look like a pretty simple format - I wouldn't be surprised if a
 # python parser already exists that can process it (even by chance), but I
@@ -77,7 +78,12 @@ def parse_acf(filename):
 
 
 def main():
-    for filename in sys.argv[1:]:
+    parser = argparse.ArgumentParser(description='Steam acf parser')
+    parser.add_argument('FILE', action='store', type=str, nargs='+',
+                        help='file to process')
+    args = parser.parse_args()
+
+    for filename in args.FILE:
         print(parse_acf(filename))
 
 
