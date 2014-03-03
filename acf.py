@@ -81,11 +81,21 @@ def main():
     parser = argparse.ArgumentParser(description='Steam acf parser')
     parser.add_argument('FILE', action='store', type=str, nargs='+',
                         help='file to process')
+    parser.add_argument('--depots', action='store_true', default=False,
+                        help='print depotcache info')
     args = parser.parse_args()
 
-    for filename in args.FILE:
-        print(parse_acf(filename))
-
+    if args.depots:
+        for filename in args.FILE:
+            acf = parse_acf(filename)
+            installdir = acf['AppState']['installdir']
+            depots = acf['AppState']['MountedDepots']
+            for k, v in depots.items():
+                print("%s_%s.manifest %s" % (k, v, installdir))
+    else:
+        for filename in args.FILE:
+            acf = parse_acf(filename)
+            print(acf)
 
 if __name__ == '__main__':
     main()
