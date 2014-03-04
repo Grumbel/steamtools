@@ -238,7 +238,7 @@ def main():
         for filename in args.FILE:
             for name, entry in decode_depotcache(filename, True):
                 if entry.filetype != "directory":
-                    print("%s %s" % (entry.sha.decode('ascii'), name.decode('latin-1').replace("\\", "/")))
+                    print("%s %s" % (entry.sha.decode('ascii'), name.decode("utf-8", errors="surrogateescape").replace("\\", "/")))
     else:
         for filename in args.FILE:
             print('Decoding %s...' % filename, file=sys.stderr)
