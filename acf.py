@@ -91,7 +91,7 @@ def main():
             installdir = acf['AppState']['installdir']
             depots = acf['AppState']['InstalledDepots']
             for k, v in depots.items():
-                	print("%s_%s.manifest %s" % (k, v['manifest'], installdir))
+                print("%s_%s.manifest %s" % (k, v['manifest'], installdir))
     else:
         for filename in args.FILE:
             acf = parse_acf(filename)
